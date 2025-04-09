@@ -8,7 +8,10 @@ SYMLINK		:=	libft_malloc.so
 LIBFT		:=	libft/libft.a
 RM		:=	rm -f
 
-SRCS		:=	srcs/main.c
+SRCS		:=	srcs/allocations.c \
+			srcs/malloc.c \
+			srcs/free.c \
+			srcs/ft_putptr_fd.c
 
 LIBRARY		?=	-I ./libft
 
