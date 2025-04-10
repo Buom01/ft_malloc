@@ -28,7 +28,7 @@ typedef struct s_allocs_blocks
 {
 	t_allocs_block	tiny_blocks[TINY_BLOCKS_COUNT];
 	t_allocs_block	small_blocks[SMALL_BLOCKS_COUNT];
-	t_alloc		big_blocks[BIG_BLOCKS_COUNT];
+	t_alloc			big_blocks[BIG_BLOCKS_COUNT];
 } t_allocs_blocks;
 
 t_allocs_blocks	get_blocks();

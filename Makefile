@@ -2,11 +2,11 @@ ifeq ($(HOSTTYPE),)
 	HOSTTYPE := $(shell uname -m)_$(shell uname -s)
 endif
 
-CC 		:=	clang
+CC 			:=	clang
 NAME		:=	libft_malloc_$(HOSTTYPE).so
 SYMLINK		:=	libft_malloc.so
 LIBFT		:=	libft/libft.a
-RM		:=	rm -f
+RM			:=	rm -f
 
 SRCS		:=	srcs/allocations.c \
 			srcs/malloc.c \
@@ -19,7 +19,7 @@ OBJS		:=	$(SRCS:.c=.o)
 CFLAGS		?=	-Wall -Werror -Wextra -g $(LIBRARY)
 
 # Colors
-RED		:= $(shell printf "\033[0;91m")
+RED			:= $(shell printf "\033[0;91m")
 GREEN		:= $(shell printf "\033[0;92m")
 BLUE		:= $(shell printf "\033[0;94m")
 MAGENTA		:= $(shell printf "\033[0;95m")
