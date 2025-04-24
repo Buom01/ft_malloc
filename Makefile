@@ -11,7 +11,8 @@ RM			:=	rm -f
 SRCS		:=	srcs/allocations.c \
 			srcs/malloc.c \
 			srcs/free.c \
-			srcs/ft_putptr_fd.c
+			srcs/ft_putptr_fd.c \
+			srcs/ft_putnbr_fd.c
 
 LIBRARY		?=	-I ./libft
 
@@ -28,7 +29,7 @@ PREFIX		:= $(MAGENTA)$(NAME)$(RESET) =>
 
 $(NAME): $(LIBFT) $(OBJS) $(SYMLINK) 
 	@echo "$(PREFIX)$(GREEN)Bundling $(RESET)$(NAME)$(GREEN) library$(RESET)"
-	@$(CC) -shared $(CFLAGS) $(OBJS) $(LIBRARY) -o $@
+	@$(CC) -shared $(CFLAGS) $(OBJS) $(LIBFT) $(LIBRARY) -o $@
 
 $(SYMLINK):
 	@echo "$(PREFIX)$(GREEN)Symlinking to $(RESET)$(SYMLINK)"

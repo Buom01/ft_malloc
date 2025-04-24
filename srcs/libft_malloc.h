@@ -7,18 +7,15 @@
 # include <string.h>
 # include <sys/mman.h>
 
-# include "libft.h"
-# include "allocations.h"
-
-// Public
 void free(void *ptr);
-void *malloc(size_t size);
+void *ft_malloc(size_t size);
 void *realloc(void *ptr, size_t size);
 
 void show_alloc_mem();
 
-// Internal
-void ft_putptr_fd(void *ptr, int fd);
-char *ft_ptrtoa(void *ptr);
+char *ft_ptrtoa_noalloc(void *ptr);
+void ft_putptr_fd_noalloc(void *ptr, int fd);
+char *ft_itoa_noalloc(int n);
+void ft_putnbr_fd_noalloc(int n, int fd);
 
 #endif

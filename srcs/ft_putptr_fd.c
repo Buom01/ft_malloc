@@ -1,6 +1,7 @@
 #include "libft_malloc.h"
+#include "libft.h"
 
-char	*ft_ptrtoa(void *ptr)
+char	*ft_ptrtoa_noalloc(void *ptr)
 {
 	static char	str[16];
 	size_t	ptrcpy;
@@ -23,7 +24,8 @@ char	*ft_ptrtoa(void *ptr)
 	return (str);
 }
 
-void	ft_putptr_fd(void *ptr, int fd)
+void	ft_putptr_fd_noalloc(void *ptr, int fd)
 {
-	ft_putstr_fd(ft_ptrtoa(ptr), fd);
+	ft_putstr_fd("0x", fd);
+	ft_putstr_fd(ft_ptrtoa_noalloc(ptr), fd);
 }
