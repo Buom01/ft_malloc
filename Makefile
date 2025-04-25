@@ -11,13 +11,14 @@ RM			:=	rm -f
 SRCS		:=	srcs/allocations.c \
 			srcs/malloc.c \
 			srcs/free.c \
+			srcs/realloc.c \
 			srcs/ft_putptr_fd.c \
 			srcs/ft_putnbr_fd.c
 
 LIBRARY		?=	-I ./libft
 
 OBJS		:=	$(SRCS:.c=.o)
-CFLAGS		?=	-Wall -Werror -Wextra -g $(LIBRARY)
+CFLAGS		?=	-Wall -Werror -Wextra -g3 $(LIBRARY)
 
 # Colors
 RED			:= $(shell printf "\033[0;91m")

@@ -1,15 +1,14 @@
 #include "libft_malloc.h"
 #include "allocations.h"
-
-//sysconf(_SC_PAGESIZE)
+#include "libft.h"
 
 static void	*insert_alloc(t_allocs_block *block, void *ptr, size_t size, size_t index)
 {
 	if (block->allocs[index].ptr)
 	{
-		memmove(
-			block->allocs + (index + 1) * sizeof(t_allocs_block),
-			block->allocs + index * sizeof(t_allocs_block),
+		ft_memmove(
+			&(block->allocs[index + 1]),
+			&(block->allocs[index]),
 			(ALLOCS_COUNT - index - 1) * sizeof(t_allocs_block)
 		);
 	}
@@ -22,7 +21,6 @@ static void	*insert_alloc(t_allocs_block *block, void *ptr, size_t size, size_t 
 
 static void	*get_available_in_block(t_allocs_block *block, size_t bsize, size_t size)
 {
-
 	// case 0 : all allocations of the block are taken
 	if (block->allocs[ALLOCS_COUNT - 1].ptr)
 		return NULL;
@@ -103,12 +101,12 @@ static void	*get_alloc(t_allocs_block *blocks, size_t count, size_t bsize, size_
 
 	if (bsize && (ptr = get_available(blocks, count, bsize, size)))
 		return ptr;
-	if ((ptr = get_new_block_alloc(blocks, count, bsize > 0 ? bsize : size, size)))
+	else if ((ptr = get_new_block_alloc(blocks, count, bsize > 0 ? bsize : size, size)))
 		return ptr;
 	return NULL;
 }
 
-void	*ft_malloc(size_t size)
+void	*malloc(size_t size)
 {
 	t_allocs_blocks	*blocks = get_blocks();
 
