@@ -53,5 +53,7 @@ void free(void *ptr)
 	else if (free_in_blocks(blocks->big_blocks, BIG_BLOCKS_COUNT, 0, ptr))
 		defrag_blocks(blocks->tiny_blocks, BIG_BLOCKS_COUNT, 0);
 	else
-		printf("WARNING : Failed to freeup %p\n", ptr);
+	{
+		// Double free
+	}
 }

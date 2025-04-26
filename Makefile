@@ -10,6 +10,7 @@ RM			:=	rm -f
 
 SRCS		:=	srcs/allocations.c \
 			srcs/malloc.c \
+			srcs/calloc.c \
 			srcs/free.c \
 			srcs/realloc.c \
 			srcs/ft_putptr_fd.c \
