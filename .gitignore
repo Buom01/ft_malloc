@@ -2,5 +2,4 @@
 *.so
 *.o
 *.out
-./main.c
 .vscode

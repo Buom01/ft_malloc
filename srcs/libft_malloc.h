@@ -12,6 +12,7 @@ void *calloc(size_t n, size_t size);
 void *realloc(void *ptr, size_t size);
 
 void show_alloc_mem();
+void show_alloc_mem_ex();
 
 char *ft_ptrtoa_noalloc(void *ptr);
 void ft_putptr_fd_noalloc(void *ptr, int fd);
