@@ -5,6 +5,7 @@
 # include <unistd.h>
 # include <sys/mman.h>
 # include <stdbool.h>
+# include <sys/resource.h>
 
 void free(void *ptr);
 void *malloc(size_t size);

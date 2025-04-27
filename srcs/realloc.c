@@ -1,6 +1,7 @@
 #include "libft_malloc.h"
 #include "allocations.h"
 #include "multithreading.h"
+#include "system.h"
 #include "libft.h"
 
 typedef struct s_alloc_info
@@ -54,16 +55,18 @@ static void find_alloc(void *ptr, t_alloc_info *alloc)
 
 void	*realloc(void *ptr, size_t size)
 {
+    t_alloc_info    alloc = {0};
+
+    size = ALIGN(size);
+
     if (size <= 0)
     {
         if (ptr)
             free(ptr);
         return NULL;
     }
-
-    size = ALIGN(size);
-
-    t_alloc_info    alloc = {0};
+    else if (size > get_malloc_limit())
+        return NULL;
 
     malloc_lock_mutex();
     find_alloc(ptr, &alloc);

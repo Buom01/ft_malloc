@@ -1,6 +1,7 @@
 #include "libft_malloc.h"
 #include "allocations.h"
 #include "multithreading.h"
+#include "system.h"
 #include "libft.h"
 
 static void	*insert_alloc(t_allocs_block *block, void *ptr, size_t size, size_t index)
@@ -129,9 +130,9 @@ void	*malloc(size_t size)
 		return get_alloc(blocks_g.tiny_blocks, TINY_BLOCKS_COUNT, TINY_BLOCK_SIZE, size);
 	else if (size <= SMALL_ALLOC_SIZE)
 		return get_alloc(blocks_g.small_blocks, SMALL_BLOCKS_COUNT, SMALL_BLOCK_SIZE, size);
+	else if (size <= get_malloc_limit())
+		return get_alloc(blocks_g.big_blocks, BIG_BLOCKS_COUNT, 0, size);
 	else
-		return get_alloc(blocks_g.big_blocks, BIG_BLOCKS_COUNT, 0, size); 
-
-	return NULL;	
+		return NULL;	
 }
 

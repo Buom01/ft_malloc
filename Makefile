@@ -10,6 +10,7 @@ RM			:=	rm -f
 
 SRCS		:=	srcs/allocations.c \
 			srcs/multithreading.c \
+			srcs/system.c \
 			srcs/malloc.c \
 			srcs/calloc.c \
 			srcs/free.c \
