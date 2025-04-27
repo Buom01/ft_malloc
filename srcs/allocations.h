@@ -12,6 +12,9 @@
 # define SMALL_BLOCKS_COUNT 1024
 # define BIG_BLOCKS_COUNT 1024 * ALLOCS_COUNT
 
+# define ALIGNEMENT 16
+# define ALIGN(size) (((size) + (ALIGNEMENT - 1)) & ~(ALIGNEMENT - 1));
+
 typedef struct s_alloc
 {
 	void	*ptr;
@@ -31,6 +34,6 @@ typedef struct s_allocs_blocks
 	t_allocs_block	big_blocks[BIG_BLOCKS_COUNT];
 } t_allocs_blocks;
 
-t_allocs_blocks	*get_blocks();
+extern t_allocs_blocks	blocks_g;
 
 #endif

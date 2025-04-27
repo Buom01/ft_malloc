@@ -9,6 +9,7 @@ LIBFT		:=	libft/libft.a
 RM			:=	rm -f
 
 SRCS		:=	srcs/allocations.c \
+			srcs/multithreading.c \
 			srcs/malloc.c \
 			srcs/calloc.c \
 			srcs/free.c \
@@ -19,7 +20,7 @@ SRCS		:=	srcs/allocations.c \
 LIBRARY		?=	-I ./libft
 
 OBJS		:=	$(SRCS:.c=.o)
-CFLAGS		?=	-Wall -Werror -Wextra -g3 $(LIBRARY)
+CFLAGS		?=	-Wall -Werror -Wextra -g3 -fPIC $(LIBRARY)
 
 # Colors
 RED			:= $(shell printf "\033[0;91m")

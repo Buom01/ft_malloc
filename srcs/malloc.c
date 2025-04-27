@@ -1,15 +1,17 @@
 #include "libft_malloc.h"
 #include "allocations.h"
+#include "multithreading.h"
 #include "libft.h"
 
 static void	*insert_alloc(t_allocs_block *block, void *ptr, size_t size, size_t index)
 {
 	if (block->allocs[index].ptr)
 	{
+		// Keeping ordered
 		ft_memmove(
 			&(block->allocs[index + 1]),
 			&(block->allocs[index]),
-			(ALLOCS_COUNT - index - 1) * sizeof(t_allocs_block)
+			(ALLOCS_COUNT - index - 1) * sizeof(t_alloc)
 		);
 	}
 
@@ -33,13 +35,13 @@ static void	*get_available_in_block(t_allocs_block *block, size_t bsize, size_t 
 			// case 1 : there are space between our first allocation and the block's begin
 			if (i == 0)
 			{
-				if ((size_t)block->allocs[i].ptr - (size_t)block->ptr >= size)
+				if (block->allocs[i].ptr - block->ptr >= (ssize_t)size)
 					return insert_alloc(block, block->ptr, size, i);
 			}
 			// case 2 : there are space between two allocations
 			else
 			{
-				if ((size_t)block->allocs[i].ptr - (size_t)block->allocs[i - 1].ptr - (size_t)block->allocs[i - 1].len >= size)
+				if (block->allocs[i].ptr - block->allocs[i - 1].ptr - block->allocs[i - 1].len >= size)
 					return insert_alloc(block, block->allocs[i - 1].ptr + block->allocs[i -1].len, size, i);
 			}
 		}
@@ -49,7 +51,7 @@ static void	*get_available_in_block(t_allocs_block *block, size_t bsize, size_t 
 			return insert_alloc(block, block->ptr, size, 0);
 		}
 		// case 4 : there are space between the last allocation and the block's end
-		else if ((size_t)block->ptr + bsize - (size_t)block->allocs[i - 1].ptr - block->allocs[i - 1].len >= size)
+		else if (block->ptr + (ssize_t)bsize - block->allocs[i - 1].ptr - block->allocs[i - 1].len >= size)
 		{
 			return insert_alloc(block, block->allocs[i - 1].ptr + block->allocs[i - 1].len, size, i);
 		}
@@ -86,6 +88,8 @@ static void	*get_new_block_alloc(t_allocs_block *blocks, size_t count, size_t bs
 		if (!blocks[i].ptr)
 		{
 			blocks[i].ptr = mmap(NULL, bsize, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+			if (!blocks[i].ptr)
+				return NULL;
 			blocks[i].allocs[0].ptr = blocks[i].ptr;
 			blocks[i].allocs[0].len = size;
 			return blocks[i].ptr;
@@ -99,23 +103,34 @@ static void	*get_alloc(t_allocs_block *blocks, size_t count, size_t bsize, size_
 {
 	void	*ptr	= NULL;
 
+	malloc_lock_mutex();
 	if (bsize && (ptr = get_available(blocks, count, bsize, size)))
+	{
+		malloc_unlock_mutex();
 		return ptr;
+	}
 	else if ((ptr = get_new_block_alloc(blocks, count, bsize > 0 ? bsize : size, size)))
+	{
+		malloc_unlock_mutex();
 		return ptr;
-	return NULL;
+	}
+	else
+	{
+		malloc_unlock_mutex();
+		return NULL;
+	}
 }
 
 void	*malloc(size_t size)
 {
-	t_allocs_blocks	*blocks = get_blocks();
+	size = ALIGN(size);
 
 	if (size <= TINY_ALLOC_SIZE)
-		return get_alloc(blocks->tiny_blocks, TINY_BLOCKS_COUNT, TINY_BLOCK_SIZE, size);
+		return get_alloc(blocks_g.tiny_blocks, TINY_BLOCKS_COUNT, TINY_BLOCK_SIZE, size);
 	else if (size <= SMALL_ALLOC_SIZE)
-		return get_alloc(blocks->small_blocks, SMALL_BLOCKS_COUNT, SMALL_BLOCK_SIZE, size);
+		return get_alloc(blocks_g.small_blocks, SMALL_BLOCKS_COUNT, SMALL_BLOCK_SIZE, size);
 	else
-		return get_alloc(blocks->big_blocks, BIG_BLOCKS_COUNT, 0, size); 
+		return get_alloc(blocks_g.big_blocks, BIG_BLOCKS_COUNT, 0, size); 
 
 	return NULL;	
 }

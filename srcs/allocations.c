@@ -1,14 +1,10 @@
 #include "allocations.h"
+#include "multithreading.h"
 #include "libft.h"
 
 #define HEX_BASE "0123456789ABCDEF"
 
-t_allocs_blocks	*get_blocks()
-{
-	static t_allocs_blocks	blocks;
-
-	return &blocks;
-}
+t_allocs_blocks	blocks_g	= {0};
 
 static void show_alloc_dump(void *begin, void *end)
 {
@@ -75,15 +71,16 @@ static void show_alloc_blocks(t_allocs_block *blocks, size_t count, char *name, 
 static void show_alloc_mem_all(bool ext)
 {
 	size_t			total	= 0;
-	t_allocs_blocks	*blocks = get_blocks();
-
-	show_alloc_blocks(blocks->tiny_blocks, TINY_BLOCKS_COUNT, "TINY", &total, ext);
-	show_alloc_blocks(blocks->small_blocks, SMALL_BLOCKS_COUNT, "SMALL", &total, ext);
-	show_alloc_blocks(blocks->big_blocks, BIG_BLOCKS_COUNT, "BIG", &total, ext);
+	
+	malloc_lock_mutex();
+	show_alloc_blocks(blocks_g.tiny_blocks, TINY_BLOCKS_COUNT, "TINY", &total, ext);
+	show_alloc_blocks(blocks_g.small_blocks, SMALL_BLOCKS_COUNT, "SMALL", &total, ext);
+	show_alloc_blocks(blocks_g.big_blocks, BIG_BLOCKS_COUNT, "BIG", &total, ext);
 	
 	ft_putstr_fd("Total : ", STDOUT_FILENO);
 	ft_putnbr_fd_noalloc(total, STDOUT_FILENO);
 	ft_putendl_fd(" bytes", STDOUT_FILENO);
+	malloc_unlock_mutex();
 }
 
 void show_alloc_mem()
