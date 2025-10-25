@@ -1,10 +1,18 @@
 #include "libft_malloc.h"
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 int main(int argc, char **argv)
 {
+	if (argc < 3)
+	{
+		printf("Usage: ./main INITIAL_BUFFER REALLOC_BUFFER\n");
+		exit(1);
+	}
+
 	show_alloc_mem();
+
 	printf("Allocating %lu bytes for `%s`\n", strlen(argv[1]) + 1,  argv[1]);	
 
 	void *ptr = malloc(strlen(argv[1]) + 1);
