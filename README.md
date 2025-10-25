@@ -18,4 +18,14 @@ $ ./main A B
 ```
 
 ## External tester
-@TODO
+I use https://github.com/c-bertran/malloc/
+Copy `tests` into the folder
+
+If you are on 42's dump:
+	Double free are not testables with it, so
+	Edit srcs/edge_cases.c
+	Empty `test_double_free`
+
+Edit tests/Makefile to update `-I` and `-L` to srcs
+
+Run `make` into tests
