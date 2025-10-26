@@ -6,8 +6,8 @@
 # define ALLOCS_COUNT 128
 # define TINY_ALLOC_SIZE 128 // n
 # define SMALL_ALLOC_SIZE 2048 // m
-# define TINY_BLOCK_SIZE (sysconf(_SC_PAGESIZE)) // N
-# define SMALL_BLOCK_SIZE (sysconf(_SC_PAGESIZE) * 16) // M
+# define TINY_BLOCK_SIZE (sysconf(_SC_PAGESIZE)) * 10 // N
+# define SMALL_BLOCK_SIZE (sysconf(_SC_PAGESIZE) * 500) // M
 # define TINY_BLOCKS_COUNT 1024
 # define SMALL_BLOCKS_COUNT 1024
 # define BIG_BLOCKS_COUNT 1024 * ALLOCS_COUNT
