@@ -35,17 +35,13 @@ static bool	free_in_blocks(t_allocs_block *blocks, size_t count, size_t bsize, v
 
 static void	freeup_blocks(t_allocs_block *blocks, size_t count, size_t bsize)
 {
-	size_t	empty_blocks_count = 0;
-
+	// Don't even keep a mmap zone if no malloc
 	for (size_t i = 0; i < count; ++i)
 	{
 		if (blocks[i].ptr && !blocks[i].allocs[0].ptr)
 		{
-			if (++empty_blocks_count > 1)
-			{
-				munmap(blocks[i].ptr, bsize);
-				blocks[i].ptr = 0;
-			}
+			munmap(blocks[i].ptr, bsize);
+			blocks[i].ptr = 0;
 		}
 	}
 }
