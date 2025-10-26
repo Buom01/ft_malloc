@@ -1,4 +1,4 @@
-#include "libft_malloc.h"
+#include "malloc.h"
 #include "multithreading.h"
 
 static pthread_once_t once_control = PTHREAD_ONCE_INIT;

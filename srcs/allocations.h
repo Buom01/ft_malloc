@@ -1,7 +1,7 @@
 #ifndef ALLOCATIONS_H
 # define ALLOCATIONS_H
 
-# include "libft_malloc.h"
+# include "malloc.h"
 
 # define ALLOCS_COUNT 128
 # define TINY_ALLOC_SIZE 128 // n
