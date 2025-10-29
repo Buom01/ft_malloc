@@ -6,18 +6,18 @@
 
 typedef struct s_alloc_info
 {
-    t_allocs_block  *block;
+    t_allocs_zone  *zone;
     size_t          index;
     size_t          bsize;
 } t_alloc_info;
 
-static void find_alloc_in_block(t_allocs_block *block, size_t bsize, void *ptr, t_alloc_info *alloc)
+static void find_alloc_in_zone(t_allocs_zone *zone, size_t bsize, void *ptr, t_alloc_info *alloc)
 {
 	for (ssize_t i = ALLOCS_COUNT - 1; i >= 0; --i)
 	{
-		if (block->allocs[i].ptr == ptr)
+		if (zone->allocs[i].ptr == ptr)
 		{
-            alloc->block = block;
+            alloc->zone = zone;
             alloc->bsize = bsize;
             alloc->index = i;
             break ;
@@ -25,13 +25,13 @@ static void find_alloc_in_block(t_allocs_block *block, size_t bsize, void *ptr, 
 	}
 }
 
-static void	find_alloc_in_blocks(t_allocs_block *blocks, size_t count, size_t bsize, void *ptr, t_alloc_info *alloc)
+static void	find_alloc_in_zones(t_allocs_zone *zones, size_t count, size_t bsize, void *ptr, t_alloc_info *alloc)
 {
 	for (ssize_t i = count - 1; i >= 0; --i)
 	{
-		if (blocks[i].ptr && blocks[i].ptr <= ptr && blocks[i].ptr + bsize >= ptr)
+		if (zones[i].ptr && zones[i].ptr <= ptr && zones[i].ptr + bsize >= ptr)
         {
-			find_alloc_in_block(&(blocks[i]), bsize, ptr, alloc);
+			find_alloc_in_zone(&(zones[i]), bsize, ptr, alloc);
             break;
         }
 	}
@@ -43,13 +43,13 @@ static void find_alloc(void *ptr, t_alloc_info *alloc)
 	if (!ptr)
 		return;
 
-    find_alloc_in_blocks(blocks_g.tiny_blocks, TINY_BLOCKS_COUNT, TINY_BLOCK_SIZE, ptr, alloc);
-    if (alloc->block)
+    find_alloc_in_zones(zones_g.tiny_zones, TINY_ZONES_COUNT, TINY_ZONE_SIZE, ptr, alloc);
+    if (alloc->zone)
         return ;
-    find_alloc_in_blocks(blocks_g.small_blocks, SMALL_BLOCKS_COUNT, SMALL_BLOCK_SIZE, ptr, alloc);
-    if (alloc->block)
+    find_alloc_in_zones(zones_g.small_zones, SMALL_ZONES_COUNT, SMALL_ZONE_SIZE, ptr, alloc);
+    if (alloc->zone)
         return ;
-    find_alloc_in_blocks(blocks_g.big_blocks, BIG_BLOCKS_COUNT, 0, ptr, alloc);
+    find_alloc_in_zones(zones_g.big_zones, BIG_ZONES_COUNT, 0, ptr, alloc);
 }
 
 
@@ -71,43 +71,43 @@ void	*realloc(void *ptr, size_t size)
     malloc_lock_mutex();
     find_alloc(ptr, &alloc);
 
-    if (alloc.block)
+    if (alloc.zone)
     {
         // Case 0 : The new allocation is smaller (or equal)
-        if (alloc.block->allocs[alloc.index].len >= size)
+        if (alloc.zone->allocs[alloc.index].len >= size)
         {
-            alloc.block->allocs[alloc.index].len = size;
+            alloc.zone->allocs[alloc.index].len = size;
             malloc_unlock_mutex();
             return ptr;
         }
-        // Case 1 : The block is full and the alloc is the last
+        // Case 1 : The zone is full and the alloc is the last
         else if (alloc.index == ALLOCS_COUNT - 1 &&
-            alloc.block->ptr + alloc.bsize >= alloc.block->allocs[alloc.index].ptr + size)
+            alloc.zone->ptr + alloc.bsize >= alloc.zone->allocs[alloc.index].ptr + size)
         {
-            alloc.block->allocs[alloc.index].len = size;
+            alloc.zone->allocs[alloc.index].len = size;
             malloc_unlock_mutex();
             return ptr;
         }
-        // Case 2 : The alloc is the last but the block isn't full
-        else if (alloc.index < ALLOCS_COUNT - 1 && alloc.block->allocs[alloc.index + 1].ptr == NULL &&
-            alloc.block->ptr + alloc.bsize >= alloc.block->allocs[alloc.index].ptr + size)
+        // Case 2 : The alloc is the last but the zone isn't full
+        else if (alloc.index < ALLOCS_COUNT - 1 && alloc.zone->allocs[alloc.index + 1].ptr == NULL &&
+            alloc.zone->ptr + alloc.bsize >= alloc.zone->allocs[alloc.index].ptr + size)
         {
-            alloc.block->allocs[alloc.index].len = size;
+            alloc.zone->allocs[alloc.index].len = size;
             malloc_unlock_mutex();
             return ptr;
         }
         // Case 3 : The alloc is followed by an other
-        else if (alloc.index < ALLOCS_COUNT - 1 && alloc.block->allocs[alloc.index + 1].ptr != NULL &&
-            alloc.block->allocs[alloc.index + 1].ptr > alloc.block->allocs[alloc.index].ptr + size)
+        else if (alloc.index < ALLOCS_COUNT - 1 && alloc.zone->allocs[alloc.index + 1].ptr != NULL &&
+            alloc.zone->allocs[alloc.index + 1].ptr > alloc.zone->allocs[alloc.index].ptr + size)
         {
-            alloc.block->allocs[alloc.index].len = size;
+            alloc.zone->allocs[alloc.index].len = size;
             malloc_unlock_mutex();
             return ptr;
         }
         // Case 4 : Cannot be expanded, and need a new allocation
         else
         {
-            size_t  len     = alloc.block->allocs[alloc.index].len;
+            size_t  len     = alloc.zone->allocs[alloc.index].len;
 	        void	*newptr = malloc(size);
 
             if (!newptr)
