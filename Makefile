@@ -18,7 +18,7 @@ SRCS		:=	srcs/allocations.c \
 			srcs/ft_putptr_fd.c \
 			srcs/ft_putnbr_fd.c
 
-LIBRARY		?=	-I ./libft
+LIBRARY		?=	-I./libft -I./includes
 
 OBJS		:=	$(SRCS:.c=.o)
 CFLAGS		?=	-Wall -Werror -Wextra -g3 -fPIC $(LIBRARY)
