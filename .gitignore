@@ -4,3 +4,6 @@
 *.out
 .vscode
 /main
+/test*
+/malloc_tests
+/*.sh
