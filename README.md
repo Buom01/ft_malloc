@@ -30,4 +30,4 @@ Copy `tests` into the folder
 Run `make` into tests
 
 ### Command
-`gcl https://github.com/c-bertran/malloc/ malloc_tests && cp -r malloc_tests/tests . && cd tests && make`
+`git clone https://github.com/c-bertran/malloc/ malloc_tests && cp -r malloc_tests/tests . && cd tests && make`
