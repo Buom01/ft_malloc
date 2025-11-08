@@ -12,9 +12,9 @@ A rather UNIX project
 `make`
 
 ## Use the provided `main.c`
-```
-$ clang main.c -Isrcs -L. -lft_malloc -o main
-$ ./main A B
+```Shell
+$ clang -Iincludes -L. -lft_malloc main.c -o main
+$ LD_LIBRARY_PATH=$(pwd)/includes:$LD_LIBRARY_PATH valgrind ./main initial_buffer the_reallocated_buffer
 ```
 
 ## Attention point
