@@ -108,6 +108,7 @@ void	*realloc(void *ptr, size_t size)
         else
         {
             size_t  len     = alloc.zone->allocs[alloc.index].len;
+            malloc_unlock_mutex();
 	        void	*newptr = malloc(size);
 
             if (!newptr)
@@ -119,14 +120,13 @@ void	*realloc(void *ptr, size_t size)
                 ft_memcpy(newptr, ptr, size);
             
             free(ptr);
-            malloc_unlock_mutex();
             return newptr;
         }
     }
     else
     {
-        ptr = malloc(size);
         malloc_unlock_mutex();
+        ptr = malloc(size);
         return ptr;
     }
 }
