@@ -2,9 +2,11 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 int main(int argc, char **argv)
 {
+	printf("Using pagesize value: %ld\n", (sysconf(_SC_PAGESIZE)));
 	if (argc < 3)
 	{
 		printf("Usage: ./main INITIAL_BUFFER REALLOC_BUFFER\n");
