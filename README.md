@@ -14,7 +14,7 @@ A rather UNIX project
 ## Use the provided `main.c`
 ```Shell
 $ clang -Iincludes -L. -lft_malloc main.c -o main
-$ LD_LIBRARY_PATH=$(pwd)/includes:$LD_LIBRARY_PATH valgrind ./main initial_buffer the_reallocated_buffer
+$ LD_LIBRARY_PATH=$(pwd):$LD_LIBRARY_PATH valgrind ./main initial_buffer the_reallocated_buffer
 ```
 
 ## Attention point
