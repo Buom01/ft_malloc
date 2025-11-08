@@ -21,7 +21,7 @@ SRCS		:=	srcs/allocations.c \
 LIBRARY		?=	-I./libft -I./includes
 
 OBJS		:=	$(SRCS:.c=.o)
-CFLAGS		?=	-Wall -Werror -Wextra -g3 -fPIC $(LIBRARY)
+CFLAGS		?=	-Wall -Werror -Wextra -fPIC $(LIBRARY)
 
 # Colors
 RED			:= $(shell printf "\033[0;91m")
